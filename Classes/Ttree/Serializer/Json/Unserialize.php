@@ -63,9 +63,11 @@ class Unserialize {
 	 */
 	protected function unserializeValue($data) {
 		if (!is_array($data)) {
-			$date = \DateTime::createFromFormat(\DateTime::ISO8601, $data);
-			if ($date !== FALSE) {
-				return $date;
+			if (is_string($data) && Functions::strlen($data) === 24) {
+				$date = \DateTime::createFromFormat(\DateTime::ISO8601, $data);
+				if ($date instanceof \DateTime) {
+					return $date;
+				}
 			}
 			return $data;
 		}
