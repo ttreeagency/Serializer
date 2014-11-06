@@ -20,7 +20,6 @@ use TYPO3\Flow\Utility\Unicode\Functions;
 /**
  * JSON Serialize
  *
- * @Flow\Scope("singleton")
  * @api
  */
 class Serialize {
