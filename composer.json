@@ -1,0 +1,14 @@
+{
+    "name": "ttree/serializer",
+    "type": "typo3-flow-package",
+    "description": "Package for TYPO3 Flow to convert PHP object to and from JSON",
+	"license": ["LGPL-3.0+"],
+    "require": {
+        "typo3/flow": "*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Ttree\\Serializer": "Classes"
+        }
+    }
+}
