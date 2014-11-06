@@ -11,6 +11,7 @@ namespace Ttree\Serializer\Tests\Unit\Json;
 
 use Ttree\Serializer\Json\Unserialize;
 use Ttree\Serializer\Tests\Unit\Json\Fixtures\SimpleObject;
+use Ttree\Serializer\Tests\Unit\Json\Fixtures\SimpleObjectTree;
 use Ttree\Serializer\Tests\Unit\Json\Fixtures\SimpleObjectWithFlowInternalProperty;
 use TYPO3\Flow\Reflection\ObjectAccess;
 use TYPO3\Flow\Tests\UnitTestCase;
@@ -110,6 +111,28 @@ class UnserializeTest extends UnitTestCase {
 		$this->assertInstanceOf('Ttree\Serializer\Tests\Unit\Json\Fixtures\SimpleObject', $newObject);
 		$this->assertSame('Bonjour', $newObject->first);
 		$this->assertSame('Monde', $newObject->last);
+	}
+
+	/**
+	 * @test
+	 */
+	public function unserializeSupportSimpleObjectTreeValue() {
+		$objectManagerMock = $this->getMockBuilder('TYPO3\Flow\Object\ObjectManager')->disableOriginalConstructor()->getMock();
+		$objectManagerMock->expects($this->at(0))->method('get')->willReturn(new SimpleObjectTree());
+		$objectManagerMock->expects($this->at(1))->method('get')->willReturn(new SimpleObject());
+		$reflectionServiceMock = $this->getMock('TYPO3\Flow\Reflection\ReflectionService');
+		$reflectionServiceMock->expects($this->at(0))->method('getClassPropertyNames')->willReturn(array('first', 'last', 'object'));
+		$reflectionServiceMock->expects($this->at(1))->method('getClassPropertyNames')->willReturn(array('first', 'last'));
+		$unserialize = new Unserialize();
+		ObjectAccess::setProperty($unserialize, 'objectManager', $objectManagerMock, TRUE);
+		ObjectAccess::setProperty($unserialize, 'reflectionService', $reflectionServiceMock, TRUE);
+		$newObject = $unserialize('{"#class":"Ttree\\\\Serializer\\\\Tests\\\\Unit\\\\Json\\\\Fixtures\\\\SimpleObjectTree","first":"Bonjour","last":"Monde","object":{"#class":"Ttree\\\\Serializer\\\\Tests\\\\Unit\\\\Json\\\\Fixtures\\\\SimpleObject","first":"Hello World","last":"World"}}');
+		$this->assertInstanceOf('Ttree\Serializer\Tests\Unit\Json\Fixtures\SimpleObjectTree', $newObject);
+		$this->assertSame('Bonjour', $newObject->first);
+		$this->assertSame('Monde', $newObject->last);
+		$this->assertInstanceOf('Ttree\Serializer\Tests\Unit\Json\Fixtures\SimpleObject', $newObject->object);
+		$this->assertSame('Hello World', $newObject->object->first);
+		$this->assertSame('World', $newObject->object->last);
 	}
 
 	/**
