@@ -35,6 +35,12 @@ class ObjectUtility {
 }
 ```
 
+### Skip property
+
+The serializer will only include gettable properties. Transient property in a Doctrine entity are skipped automaticaly.
+
+You can skip any property by using the ``Ttree\Serializer\Annotations\Skip``.
+
 ## Functional Programming
 
 You can also use directly the objects ``Ttree\Serializer\Json\Serialize`` and ``Ttree\Serializer\Json\Serialize`` in a

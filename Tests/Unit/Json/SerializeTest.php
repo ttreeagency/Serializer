@@ -103,7 +103,8 @@ class SerializeTest extends UnitTestCase {
 	public function serializeSupportSimpleObjectValue() {
 		$object = new SimpleObject();
 		$reflectionServiceMock = $this->getMock('TYPO3\Flow\Reflection\ReflectionService');
-		$reflectionServiceMock->expects($this->any())->method('getClassPropertyNames')->willReturn(array('first', 'last'));
+		$reflectionServiceMock->expects($this->once())->method('getClassPropertyNames')->willReturn(array('first', 'last'));
+		$reflectionServiceMock->expects($this->any())->method('getPropertyNamesByAnnotation')->willReturn(array());
 		$serializer = new Serialize();
 		ObjectAccess::setProperty($serializer, 'reflectionService', $reflectionServiceMock, TRUE);
 		$this->assertSame('{"#class":"Ttree\\\\Serializer\\\\Tests\\\\Unit\\\\Json\\\\Fixtures\\\\SimpleObject","first":"Hello","last":"World"}', $serializer($object));
@@ -112,11 +113,24 @@ class SerializeTest extends UnitTestCase {
 	/**
 	 * @test
 	 */
+	public function serializeSupportSkippedPropertyWithSimpleObjectValue() {
+		$object = new SimpleObject();
+		$reflectionServiceMock = $this->getMock('TYPO3\Flow\Reflection\ReflectionService');
+		$reflectionServiceMock->expects($this->once())->method('getClassPropertyNames')->willReturn(array('first', 'last'));
+		$reflectionServiceMock->expects($this->any())->method('getPropertyNamesByAnnotation')->willReturn(array('first' => TRUE));
+		$serializer = new Serialize();
+		ObjectAccess::setProperty($serializer, 'reflectionService', $reflectionServiceMock, TRUE);
+		$this->assertSame('{"#class":"Ttree\\\\Serializer\\\\Tests\\\\Unit\\\\Json\\\\Fixtures\\\\SimpleObject","last":"World"}', $serializer($object));
+	}
+
+	/**
+	 * @test
+	 */
 	public function serializeSupportSimpleObjectTreeValue() {
 		$object = new SimpleObjectTree();
 		$reflectionServiceMock = $this->getMock('TYPO3\Flow\Reflection\ReflectionService');
-		$reflectionServiceMock->expects($this->at(0))->method('getClassPropertyNames')->willReturn(array('first', 'last', 'object'));
-		$reflectionServiceMock->expects($this->at(1))->method('getClassPropertyNames')->willReturn(array('first', 'last'));
+		$reflectionServiceMock->expects($this->any())->method('getClassPropertyNames')->willReturn(array('first', 'last', 'object'));
+		$reflectionServiceMock->expects($this->any())->method('getPropertyNamesByAnnotation')->willReturn(array());
 		$serializer = new Serialize();
 		ObjectAccess::setProperty($serializer, 'reflectionService', $reflectionServiceMock, TRUE);
 		$this->assertSame('{"#class":"Ttree\\\\Serializer\\\\Tests\\\\Unit\\\\Json\\\\Fixtures\\\\SimpleObjectTree","first":"Hello","last":"World","object":{"#class":"Ttree\\\\Serializer\\\\Tests\\\\Unit\\\\Json\\\\Fixtures\\\\SimpleObject","first":"Hello World","last":"World"}}', $serializer($object));
@@ -129,6 +143,7 @@ class SerializeTest extends UnitTestCase {
 		$object = new SimpleObjectWithFlowInternalProperty();
 		$reflectionServiceMock = $this->getMock('TYPO3\Flow\Reflection\ReflectionService');
 		$reflectionServiceMock->expects($this->any())->method('getClassPropertyNames')->willReturn(array('first', 'last', 'Flow_Aop_Proxy_invokeJoinpoint'));
+		$reflectionServiceMock->expects($this->any())->method('getPropertyNamesByAnnotation')->willReturn(array());
 		$serializer = new Serialize();
 		ObjectAccess::setProperty($serializer, 'reflectionService', $reflectionServiceMock, TRUE);
 		$this->assertSame('{"#class":"Ttree\\\\Serializer\\\\Tests\\\\Unit\\\\Json\\\\Fixtures\\\\SimpleObjectWithFlowInternalProperty","first":"Hello","last":"World"}', $serializer($object));

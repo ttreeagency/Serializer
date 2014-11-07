@@ -194,9 +194,9 @@ class Serialize {
 		$whitespace = $this->newline . str_repeat($this->indentation, $indent + 1);
 
 		$string = '{' . $whitespace . '"' . JsonSerializer::CLASS_NAME . '":' . $this->padding . json_encode($className);
-
+		
 		foreach ($this->reflectionService->getClassPropertyNames($className) as $propertyName) {
-			if (Functions::substr($propertyName, 0, 5) === 'Flow_') {
+			if ($this->skipProperty($object, $className, $propertyName)) {
 				continue;
 			}
 			$string .= ','
@@ -210,6 +210,30 @@ class Serialize {
 		$string .= $this->newline . str_repeat($this->indentation, $indent) . '}';
 
 		return $string;
+	}
+
+	/**
+	 * Check if a property must be skipped
+	 *
+	 * @param object $object
+	 * @param string $className
+	 * @param string $propertyName
+	 * @return boolean
+	 */
+	protected function skipProperty($object, $className, $propertyName) {
+		if (Functions::substr($propertyName, 0, 5) === 'Flow_') {
+			return TRUE;
+		}
+		if (!ObjectAccess::isPropertyGettable($object, $propertyName)) {
+			return TRUE;
+		}
+		$propertiesToSkip = $this->reflectionService->getPropertyNamesByAnnotation($className, 'Ttree\Serializer\Annotations\Skip');
+		$transientProperties = $this->reflectionService->getPropertyNamesByAnnotation($className, 'TYPO3\Flow\Annotations\Transient');
+		if (array_key_exists($propertyName, $propertiesToSkip) || array_key_exists($propertyName, $transientProperties)) {
+			return TRUE;
+		}
+
+		return FALSE;
 	}
 
 	/**
