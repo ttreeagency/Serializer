@@ -112,7 +112,7 @@ class Unserialize {
 		foreach ($this->reflectionService->getClassPropertyNames($className) as $propertyName) {
 			if (array_key_exists($propertyName, $data)) {
 				$value = $this->unserializeValue($data[$propertyName]);
-				ObjectAccess::setProperty($object, $propertyName, $value);
+				ObjectAccess::setProperty($object, $propertyName, $value, TRUE);
 			}
 		}
 
