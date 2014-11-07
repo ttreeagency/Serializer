@@ -14,6 +14,7 @@ use TYPO3\Flow\Object\ObjectManager;
 use TYPO3\Flow\Reflection\ObjectAccess;
 use TYPO3\Flow\Reflection\ReflectionService;
 use TYPO3\Flow\Utility\Unicode\Functions;
+use DateTime;
 
 /**
  * JSON Serialize
@@ -63,11 +64,8 @@ class Unserialize {
 	 */
 	protected function unserializeValue($data) {
 		if (!is_array($data)) {
-			if (is_string($data) && Functions::strlen($data) === 24) {
-				$date = \DateTime::createFromFormat(\DateTime::ISO8601, $data);
-				if ($date instanceof \DateTime) {
-					return $date;
-				}
+			if (is_string($data) && Functions::strlen($data) === 24 && ($date = DateTime::createFromFormat(DateTime::ISO8601, $data)) instanceof DateTime) {
+				return $date;
 			}
 			return $data;
 		}
