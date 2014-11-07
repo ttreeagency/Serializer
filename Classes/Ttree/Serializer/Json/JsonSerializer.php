@@ -27,12 +27,6 @@ class JsonSerializer implements SerializerInterface {
 	const CLASS_NAME = '#class';
 
 	/**
-	 * Hash token previously used to identify PHP hashes (arrays with keys)
-	 * @type string
-	 */
-	const HASH = '#hash';
-
-	/**
 	 * Standard class name
 	 * @type string
 	 */

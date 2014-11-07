@@ -73,11 +73,6 @@ class Unserialize {
 		}
 
 		if (array_key_exists(JsonSerializer::CLASS_NAME, $data)) {
-			if ($data[JsonSerializer::CLASS_NAME] === JsonSerializer::HASH) {
-				unset($data[JsonSerializer::CLASS_NAME]);
-				return $this->unserializeArray($data);
-			}
-
 			return $this->unserializeObject($data);
 		}
 
