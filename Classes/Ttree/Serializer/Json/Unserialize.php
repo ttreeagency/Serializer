@@ -41,19 +41,9 @@ class Unserialize {
 	 * @param string $string JSON serialized value/array/object representation
 	 * @return mixed The unserialized value, array or object-graph.
 	 */
-	public function unserialize($string) {
-		$data = json_decode($string, true);
+	public function __invoke($string) {
+		$data = json_decode($string, TRUE);
 		return $this->unserializeValue($data);
-	}
-
-	/**
-	 * Unserialize a value/array/object-graph from a JSON string representation.
-	 *
-	 * @param string $string JSON serialized value/array/object representation
-	 * @return mixed The unserialized value, array or object-graph.
-	 */
-	function __invoke($string) {
-		return $this->unserialize($string);
 	}
 
 	/**

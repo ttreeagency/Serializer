@@ -21,4 +21,5 @@ before_script:
   - ./BeforeScriptTravis.sh
 
 script:
-    - phpunit --coverage-clover=coverage.clover -c Build/BuildEssentials/PhpUnit/UnitTests.xml Packages/Application/Ttree.Serializer/Tests/Unit
+    - phpunit -c Build/BuildEssentials/PhpUnit/UnitTests.xml Packages/Application/Ttree.Serializer/Tests/Unit
+    - php bin/phpcs --standard=TYPO3Flow Packages/Application/Ttree.Serializer

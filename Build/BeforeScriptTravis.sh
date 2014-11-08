@@ -18,6 +18,7 @@ cat <<EOF > composer.json
 		"typo3/buildessentials": "${FLOW_VERSION}",
 		"mikey179/vfsstream": "1.2.*",
 		"phpunit/phpunit": "4.0.*",
+		"typo3-ci/typo3flow": "dev-master",
 		"flowpack/behat": "dev-master"
 	},
 	"scripts": {

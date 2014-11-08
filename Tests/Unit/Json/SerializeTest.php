@@ -36,7 +36,7 @@ class SerializeTest extends UnitTestCase {
 	public function serializeSupportBooleanValue() {
 		$serializer = new Serialize();
 		$this->assertSame('true', $serializer(TRUE));
-		$this->assertSame('false', $serializer(false));
+		$this->assertSame('false', $serializer(FALSE));
 	}
 
 	/**

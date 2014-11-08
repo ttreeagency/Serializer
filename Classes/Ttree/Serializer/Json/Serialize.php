@@ -34,7 +34,7 @@ class Serialize {
 	 * Newline character(s)
 	 * @var string
 	 */
-	protected $newline = "";
+	protected $newline = '';
 
 	/**
 	 * Padding character(s) after ":" in JSON objects
@@ -61,24 +61,13 @@ class Serialize {
 	 * @param boolean $pretty true to enable "pretty" JSON formatting.
 	 * @return string JSON serialized representation
 	 */
-	public function serialize($value, $pretty = FALSE) {
+	public function __invoke($value, $pretty = FALSE) {
 		if ($pretty) {
 			$this->indentation = '  ';
 			$this->newline = "\n";
 			$this->padding = ' ';
 		}
 		return $this->serializeValue($value, 0);
-	}
-
-	/**
-	 * Serialize a given PHP value/array/object-graph to a JSON representation.
-	 *
-	 * @param mixed $value The value, array, or object-graph to be serialized.
-	 * @param boolean $pretty true to enable "pretty" JSON formatting.
-	 * @return string JSON serialized representation
-	 */
-	function __invoke($value, $pretty = FALSE) {
-		return $this->serialize($value, $pretty);
 	}
 
 	/**
@@ -165,13 +154,8 @@ class Serialize {
 		$comma = '';
 
 		foreach ($hash as $key => $item) {
-			$string .= $comma
-				. $whitespace
-				. json_encode($key)
-				. ':'
-				. $this->padding
-				. $this->serializeValue($item, $indent + 1);
-
+			$serializedValue = $this->serializeValue($item, $indent + 1);
+			$string .= sprintf('%s%s%s:%s%s', $comma, $whitespace, json_encode($key), $this->padding, $serializedValue);
 			$comma = ',';
 		}
 
@@ -193,18 +177,13 @@ class Serialize {
 
 		$whitespace = $this->newline . str_repeat($this->indentation, $indent + 1);
 
-		$string = '{' . $whitespace . '"' . JsonSerializer::CLASS_NAME . '":' . $this->padding . json_encode($className);
-		
+		$string = sprintf('{%s"%s":%s%s', $whitespace, JsonSerializer::CLASS_NAME, $this->padding, json_encode($className));
 		foreach ($this->reflectionService->getClassPropertyNames($className) as $propertyName) {
 			if ($this->skipProperty($object, $className, $propertyName)) {
 				continue;
 			}
-			$string .= ','
-				. $whitespace
-				. json_encode($propertyName)
-				. ':'
-				. $this->padding
-				. $this->serializeValue(ObjectAccess::getProperty($object, $propertyName), $indent + 1);
+			$serializedValue = $this->serializeValue(ObjectAccess::getProperty($object, $propertyName), $indent + 1);
+			$string .= sprintf(',%s%s:%s%s', $whitespace, json_encode($propertyName), $this->padding, $serializedValue);
 		}
 
 		$string .= $this->newline . str_repeat($this->indentation, $indent) . '}';

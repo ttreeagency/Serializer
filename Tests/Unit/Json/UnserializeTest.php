@@ -36,7 +36,7 @@ class UnserializeTest extends UnitTestCase {
 	public function unserializeSupportBooleanValue() {
 		$unserializer = new Unserialize();
 		$this->assertSame(TRUE, $unserializer('true'));
-		$this->assertSame(false, $unserializer('false'));
+		$this->assertSame(FALSE, $unserializer('false'));
 	}
 
 	/**

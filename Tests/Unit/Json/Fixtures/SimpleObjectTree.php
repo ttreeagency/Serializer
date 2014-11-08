@@ -14,7 +14,7 @@ class SimpleObjectTree {
 	public $last = 'World';
 	public $object;
 
-	function __construct() {
+	public function __construct() {
 		$this->object = new SimpleObject();
 		$this->object->first = 'Hello World';
 	}
