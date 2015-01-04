@@ -10,16 +10,15 @@ cat <<EOF > composer.json
 		"bin-dir": "bin"
 	},
 	"require": {
-		"ttree/serializer": "dev-${TRAVIS_BRANCH}#${TRAVIS_COMMIT}",
-		"doctrine/migrations": "dev-master",
+		"ttree/serializer": "dev-${GIT_BRANCH}#${GIT_COMMIT}",
+		"doctrine/migrations": "@dev",
 		"typo3/flow": "${FLOW_VERSION}"
 	},
 	"require-dev": {
 		"typo3/buildessentials": "${FLOW_VERSION}",
-		"mikey179/vfsstream": "1.2.*",
-		"phpunit/phpunit": "4.0.*",
-		"typo3-ci/typo3flow": "dev-master",
-		"flowpack/behat": "dev-master"
+		"mikey179/vfsstream": "1.4.*",
+		"phpunit/phpunit": "4.3.*",
+		"typo3-ci/typo3flow": "dev-master"
 	},
 	"scripts": {
 		"post-update-cmd": "TYPO3\\\\Flow\\\\Composer\\\\InstallerScripts::postUpdateAndInstall",
